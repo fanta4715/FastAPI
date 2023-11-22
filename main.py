@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from prophet import Prophet
 import pandas as pd
 from datetime import datetime, timedelta
@@ -8,7 +8,9 @@ from datetime import datetime, timedelta
 
 
 app = FastAPI()
-today = datetime.today()
+# today = datetime.today()
+today = datetime(2023, 6, 30) #임시로 넣은 값임
+
 
 model = Prophet()
 
@@ -32,9 +34,6 @@ async def get_prediction():
 
     forecast = model.predict(future_7days) # 향후 11월 1일부터 11월 8일까지의 예측, dataFrame에 저장
     result = {
-        "dates": forecast['ds'].dt.strftime('%Y-%m-%d').tolist(),
-        "lower_bound": forecast['yhat_lower'].tolist(),
-        "upper_bound": forecast['yhat_upper'].tolist(),
         "mean": forecast['yhat'].tolist()
     }
     return result
