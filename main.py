@@ -22,11 +22,12 @@ df['ds'] = pd.to_datetime(df['ds'], errors = 'coerce')
 
 model.fit(df)
 
-@app.get("/predict/")
-async def get_prediction():
+@app.get("/predict")
+async def get_prediction(date: str):
     # 시작 날짜(오늘)와 종료 날짜(7일 후) 생성
-    start_date = today.strftime('%Y%m%d')
-    end_date = (today + timedelta(days=7)).strftime('%Y%m%d')
+    start_date = datetime.strptime(date, "%Y-%m-%d")
+    # start_date = today.strftime('%Y%m%d')
+    end_date = (start_date + timedelta(days=7)).strftime('%Y%m%d')
 
     future_7days=pd.date_range(start=start_date, end=end_date, freq='D')
     future_7days = pd.DataFrame(future_7days, columns = ['ds'])
