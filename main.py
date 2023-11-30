@@ -12,7 +12,7 @@ app = FastAPI()
 today = datetime(2023, 6, 30) #임시로 넣은 값임
 
 
-df = pd.read_csv("Combined_Gwang.csv").iloc[:,:2]
+df = pd.read_csv("updated.csv").iloc[:,:2]
 df['ds'] = pd.to_datetime(df['ds'], errors = 'coerce')
 df['y'] = df['y'].str.replace(',', '').astype('int64')
 df.loc[df['y'] == 0, 'y'] = df['y'].mean()
@@ -24,12 +24,10 @@ model.fit(df)
 @app.get("/predict")
 async def get_prediction(date: str):
     # 시작 날짜(오늘)와 종료 날짜(7일 후) 생성
-    # start_date = datetime.strptime(date, "%Y-%m-%d")
-    # # start_date = today.strftime('%Y%m%d')
-    # end_date = (start_date + timedelta(days=7)).strftime('%Y%m%d')
-
-    start_date = '20231118'
-    end_date = '20231125'
+    start_date = datetime.strptime(date, "%Y-%m-%d")
+    start_date += timedelta(days=1)
+    # start_date = today.strftime('%Y%m%d')
+    end_date = (start_date + timedelta(days=6)).strftime('%Y%m%d')
 
     future_7days=pd.date_range(start=start_date, end=end_date, freq='D')
     future_7days = pd.DataFrame(future_7days, columns = ['ds'])
